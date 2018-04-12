@@ -1,4 +1,4 @@
-(* 
+(*
                               CS51 Lab 8
                                 Events
                              Spring 2018
@@ -10,10 +10,10 @@ Objective:
 This lab introduces events and listeners, a paradigm that is
 particularly useful in the programming of front-end applications.
 Event programming in the back-end has also grown in popularity
-with the rise of Node.js. 
+with the rise of Node.js.
  *)
 
-   
+
 (*====================================================================
                          Events and Listeners
 
@@ -24,11 +24,11 @@ API? You might create an abstraction for drawing, so that
 an application could call a method in your API to draw a button.
 This has the benefit of allowing you to control the button style
 throughout the whole OS, and the application's developer need
-only call a single method to draw a button in an application. 
+only call a single method to draw a button in an application.
 
-Once you've added buttons to your API, how would you allow 
-client applications to react to, say, a mouse click? 
-One way might be to add a function parameter to the button creation 
+Once you've added buttons to your API, how would you allow
+client applications to react to, say, a mouse click?
+One way might be to add a function parameter to the button creation
 method. The function that is passed on creation of the button
 could then be executed each time the user
 presses the button. This type of parameter is referred to as a *callback*:
@@ -42,7 +42,7 @@ could long-click, double-click, right-click, or maybe even use the
 keyboard to activate the button. An application might require
 different behavior in each case; that would mean many individual
 callbacks. Adding parameters for each type of interaction quickly
-becomes untenable. 
+becomes untenable.
 
 One solution to this problem is to leverage *events*. Programmers
 using your API write functions that are designed to handle
@@ -50,9 +50,9 @@ various events, like a keyboard press or a right-click, and notify
 the API which functions react to these events by "registering" the
 functions for those events.
 
-JavaScript makes frequent use of this paradigm. For example, you might 
-have code that executes a function when 
-the "onclick" event is fired. This event is named appropriately: 
+JavaScript makes frequent use of this paradigm. For example, you might
+have code that executes a function when
+the "onclick" event is fired. This event is named appropriately:
 it is the one that is fired upon clicking an on-screen object.
 
 In the end, there are several requirements for events to work: we must
@@ -93,7 +93,7 @@ end
 
 (* Below are the beginnings of an implementation of the interface.
 Look at the interface, above, for descriptions of each function. *)
-  
+
 module WEvent : WEVENT =
 struct
   type id = int
@@ -120,29 +120,30 @@ Exercise 1: Write add_listener, which adds a listener to an
 event. Consider the explanations of waiters and events, above, to
 decide how to implement this.
 ......................................................................*)
-                                                   
+
   let add_listener (evt : 'a event) (listener : 'a -> unit) : id =
-    failwith "WEvent.add_listener not implemented"
+     evt := {id : new_id (); action : listener} :: evt ;
+     !id_counter ;;
 
 (*......................................................................
 Exercise 2: Write remove_listener, which, given an id and an event,
 unregisters the listener with that id from the event if there is
 one. If there is no listener with that id, do nothing.
 ......................................................................*)
-            
-  let remove_listener (evt : 'a event) (i : id) : unit =
-    failwith "WEvent.remove_listener not implemented"
+
+  let rec remove_listener (evt : 'a event) (i : id) : unit =
+  List.filter (x.id <> i) !evt ;;
 
 (*......................................................................
 Exercise 3: Write fire_event, which will execute all event handlers
 listening for the event.
 ......................................................................*)
-            
+
   let fire_event (evt : 'a event) (arg : 'a) : unit =
     failwith "WEvent.fire_event not implemented"
 
 end
-  
+
 (*====================================================================
                A sample application: Newswire headlines
 
@@ -155,14 +156,14 @@ and publish the headlines. *)
 Exercise 4: Given your implementation of Event, create a new event
 called "newswire" that should pass strings to the event handlers.
 ......................................................................*)
-  
+
 let newswire = fun _ -> failwith "newswire not implemented" ;;
 
 (* News organizations might want to register event listeners to the
 newswire so that they might report on stories. Below are functions
 for two organizations that accept headlines and "publish" stories (to
 stdout) in different ways. *)
-            
+
 let fakeNewsNetwork (s : string) : unit =
   Printf.printf "BREAKING NEWS %s\n" s ;;
 
@@ -173,7 +174,7 @@ let buzzFake (s : string) : unit =
 Exercise 5: Register these two news organizations as listeners to the
 newswire event.
 ......................................................................*)
-  
+
 (* .. *)
 
 (* Here are some headlines to play with. *)
@@ -186,7 +187,7 @@ let h3 = "bactrian camels can weigh up to 2200lbs!" ;;
 Exercise 6: Finally, fire newswire events with the above three
 headlines, and observe what happens!
 ......................................................................*)
-  
+
 (* .. *)
 
 (* Imagine now that you work at Facebook, and you're growing concerned
@@ -207,7 +208,7 @@ Exercise 8: Create a new event called publish to signal that all
 stories should be published. The event should be a unit WEvent.event.
 ......................................................................*)
 
-let publish = fun _ -> failwith "publish not implemented" ;; 
+let publish = fun _ -> failwith "publish not implemented" ;;
 
 (*......................................................................
 Exercise 9: Write a function receive_report to handle new news
@@ -229,8 +230,8 @@ newswire event.
 
 (* Here are some new headlines to use for testing this part. *)
 
-let h4 = "today's top story: memes." ;; 
-let h5 = "you can lose 20 pounds in 20 minutes!" ;; 
+let h4 = "today's top story: memes." ;;
+let h5 = "you can lose 20 pounds in 20 minutes!" ;;
 let h6 = "sheep have wool, not hair." ;;
 
 (*......................................................................
@@ -247,7 +248,7 @@ print_string "Moved to publication.\n" ;;
 (*......................................................................
 Exercise 12: Finally, make sure that firing the publish event prints
 out the headlines. You should see the headlines printed after
-the line above. 
+the line above.
 ......................................................................*)
 
 (* .. *)
